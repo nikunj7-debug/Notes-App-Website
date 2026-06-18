@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoteNest - Smart Notes App</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--purple:#7b2cbf;
+--purple-dark:#5a189a;
+--yellow:#ffd60a;
+--yellow-light:#ffe45e;
+--white:#ffffff;
+--dark:#222;
+--glass:rgba(255,255,255,0.18);
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:linear-gradient(135deg,#7b2cbf,#ffd60a);
+overflow-x:hidden;
+}
+
+/* BACKGROUND */
+
+.background{
+position:fixed;
+width:100%;
+height:100%;
+z-index:-1;
+overflow:hidden;
+}
+
+.circle{
+position:absolute;
+border-radius:50%;
+opacity:0.15;
+background:white;
+}
+
+.c1{
+width:250px;
+height:250px;
+top:-50px;
+left:-50px;
+}
+
+.c2{
+width:300px;
+height:300px;
+bottom:-100px;
+right:-50px;
+}
+
+.c3{
+width:180px;
+height:180px;
+top:40%;
+left:70%;
+}
+
+/* GENERAL */
+
+.hidden{
+display:none !important;
+}
+
+.container{
+width:100%;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+/* AUTH */
+
+.auth-card{
+width:100%;
+max-width:450px;
+background:var(--glass);
+backdrop-filter:blur(15px);
+padding:35px;
+border-radius:25px;
+box-shadow:0 15px 35px rgba(0,0,0,.2);
+}
+
+.logo{
+font-size:2rem;
+font-weight:700;
+color:white;
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:white;
+margin-bottom:25px;
+}
+
+.input-group{
+margin-bottom:15px;
+position:relative;
+}
+
+.input-group input{
+width:100%;
+padding:14px;
+border:none;
+outline:none;
+border-radius:12px;
+font-size:1rem;
+}
+
+.eye-btn{
+position:absolute;
+right:15px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+font-size:18px;
+}
+
+.btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:1rem;
+font-weight:600;
+transition:.3s;
+}
+
+.btn-primary{
+background:var(--yellow);
+color:#222;
+}
+
+.btn-primary:hover{
+transform:translateY(-2px);
+}
+
+.switch-text{
+text-align:center;
+margin-top:15px;
+color:white;
+}
+
+.switch-text span{
+cursor:pointer;
+font-weight:600;
+color:#fff;
+}
+
+.password-rules{
+background:rgba(255,255,255,.15);
+padding:15px;
+border-radius:12px;
+color:white;
+font-size:.85rem;
+margin-bottom:15px;
+}
+
+.password-rules ul{
+padding-left:20px;
+}
+
+.password-rules li.valid{
+color:#4caf50;
+font-weight:700;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+padding:30px;
+min-height:100vh;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+flex-wrap:wrap;
+margin-bottom:30px;
+}
+
+.brand{
+font-size:2rem;
+font-weight:700;
+color:white;
+}
+
+.top-actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.small-btn{
+padding:12px 20px;
+border:none;
+border-radius:10px;
+font-weight:600;
+cursor:pointer;
+background:var(--yellow);
+}
+
+.search-box{
+width:100%;
+max-width:900px;
+margin:auto;
+margin-bottom:25px;
+}
+
+.search-box input{
+width:100%;
+padding:18px;
+border:none;
+outline:none;
+border-radius:50px;
+font-size:1rem;
+}
+
+.folder-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.folder-card{
+background:rgba(255,255,255,.18);
+backdrop-filter:blur(12px);
+padding:25px;
+border-radius:20px;
+color:white;
+transition:.3s;
+cursor:pointer;
+}
+
+.folder-card:hover{
+transform:translateY(-4px);
+}
+
+.folder-card h3{
+margin-bottom:10px;
+}
+
+.folder-actions{
+margin-top:15px;
+display:flex;
+gap:10px;
+}
+
+.folder-actions button{
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+}
+
+.open-btn{
+background:var(--yellow);
+}
+
+.delete-btn{
+background:#ff4d6d;
+color:white;
+}
+
+/* MODAL */
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.modal-content{
+width:100%;
+max-width:500px;
+background:white;
+padding:25px;
+border-radius:20px;
+}
+
+.modal-content h2{
+margin-bottom:15px;
+}
+
+.modal-content input{
+width:100%;
+padding:14px;
+border:1px solid #ddd;
+border-radius:10px;
+margin-bottom:15px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.logo{
+font-size:1.6rem;
+}
+
+.brand{
+font-size:1.6rem;
+}
+
+.folder-grid{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="background">
+<div class="circle c1"></div>
+<div class="circle c2"></div>
+<div class="circle c3"></div>
+</div>
+
+<!-- LOGIN -->
+
+<section id="loginPage" class="container">
+
+<div class="auth-card">
+
+<div class="logo">📝 NoteNest</div>
+
+<div class="subtitle">
+Organize your folders and notes effortlessly
+</div>
+
+<div class="input-group">
+<input type="email" id="loginEmail" placeholder="Email">
+</div>
+
+<div class="input-group">
+<input type="password" id="loginPassword" placeholder="Password">
+<span class="eye-btn" onclick="togglePassword('loginPassword',this)">👁</span>
+</div>
+
+<button class="btn btn-primary" onclick="loginUser()">
+Login
+</button>
+
+<div class="switch-text">
+Don't have an account?
+<span onclick="showSignup()">Sign Up</span>
+</div>
+
+</div>
+
+</section>
+
+<!-- SIGNUP -->
+
+<section id="signupPage" class="container hidden">
+
+<div class="auth-card">
+
+<div class="logo">✨ Create Account</div>
+
+<div class="subtitle">
+Start saving your notes today
+</div>
+
+<div class="input-group">
+<input type="text" id="signupName" placeholder="Full Name">
+</div>
+
+<div class="input-group">
+<input type="email" id="signupEmail" placeholder="Email">
+</div>
+
+<div class="input-group">
+<input type="password" id="signupPassword" placeholder="Password">
+<span class="eye-btn" onclick="togglePassword('signupPassword',this)">👁</span>
+</div>
+
+<div class="password-rules">
+<b>Password Requirements:</b>
+<ul>
+<li id="ruleLength">At least 8 characters</li>
+<li id="ruleUpper">One uppercase letter</li>
+<li id="ruleLower">One lowercase letter</li>
+<li id="ruleNumber">One number</li>
+<li id="ruleSpecial">One special character</li>
+</ul>
+</div>
+
+<button class="btn btn-primary" onclick="signupUser()">
+Create Account
+</button>
+
+<div class="switch-text">
+Already have an account?
+<span onclick="showLogin()">Login</span>
+</div>
+
+</div>
+
+</section>
+
+<!-- DASHBOARD -->
+
+<section id="dashboardPage" class="dashboard hidden">
+
+<div class="topbar">
+
+<div class="brand">
+📂 NoteNest
+</div>
+
+<div class="top-actions">
+
+<button
+class="small-btn"
+onclick="openFolderModal()">
++ New Folder
+</button>
+
+<button
+class="small-btn"
+onclick="logoutUser()">
+Logout
+</button>
+
+</div>
+
+</div>
+
+<div class="search-box">
+
+<input
+type="text"
+id="folderSearch"
+placeholder="Search folders...">
+
+</div>
+
+<div id="folderGrid" class="folder-grid">
+
+<!-- PART 2 -->
+
+</div>
+
+</section>
+
+<!-- CREATE FOLDER MODAL -->
+
+<div id="folderModal" class="modal hidden">
+
+<div class="modal-content">
+
+<h2>Create Folder</h2>
+
+<input
+type="text"
+id="folderName"
+placeholder="Folder Name">
+
+<button
+class="btn btn-primary"
+onclick="createFolder()">
+Create Folder
+</button>
+
+<br><br>
+
+<button
+class="btn"
+onclick="closeFolderModal()">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* ==========================
+   GLOBAL VARIABLES
+   ========================== */
+
+let currentUser = "";
+let folders = [];
+
+/* ==========================
+   PAGE SWITCHING
+   ========================== */
+
+function hideAllPages(){
+
+document
+.querySelectorAll("section")
+.forEach(section=>{
+
+section.classList.add("hidden");
+
+});
+
+}
+
+function showLogin(){
+
+hideAllPages();
+
+document
+.getElementById("loginPage")
+.classList.remove("hidden");
+
+}
+
+function showSignup(){
+
+hideAllPages();
+
+document
+.getElementById("signupPage")
+.classList.remove("hidden");
+
+}
+
+function showDashboard(){
+
+hideAllPages();
+
+document
+.getElementById("dashboardPage")
+.classList.remove("hidden");
+
+}
+
+/* ==========================
+   PASSWORD VISIBILITY
+   ========================== */
+
+function togglePassword(id,icon){
+
+const input =
+document.getElementById(id);
+
+if(input.type==="password"){
+
+input.type="text";
+icon.innerHTML="🙈";
+
+}else{
+
+input.type="password";
+icon.innerHTML="👁";
+
+}
+
+}
+
+/* ==========================
+   PASSWORD VALIDATION
+   ========================== */
+
+function validPassword(password){
+
+const regex =
+/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+return regex.test(password);
+
+}
+
+function updatePasswordRules(password){
+const checks = [
+{
+ id: "ruleLength",
+ valid: password.length >= 8
+},
+{
+ id: "ruleUpper",
+ valid: /[A-Z]/.test(password)
+},
+{
+ id: "ruleLower",
+ valid: /[a-z]/.test(password)
+},
+{
+ id: "ruleNumber",
+ valid: /\d/.test(password)
+},
+{
+ id: "ruleSpecial",
+ valid: /[\W_]/.test(password)
+}
+];
+
+checks.forEach(rule => {
+const element = document.getElementById(rule.id);
+if(element){
+ element.classList.toggle("valid", rule.valid);
+}
+});
+}
+
+/* ==========================
+   SIGNUP
+   ========================== */
+
+function signupUser(){
+
+const name =
+document.getElementById("signupName").value.trim();
+
+const email =
+document.getElementById("signupEmail").value
+.trim()
+.toLowerCase();
+
+const password =
+document.getElementById("signupPassword").value;
+
+updatePasswordRules(password);
+
+if(!name || !email || !password){
+
+alert("Please fill all fields");
+return;
+
+}
+
+if(!validPassword(password)){
+
+alert(
+"Password does not meet requirements."
+);
+
+return;
+
+}
+
+localStorage.setItem(
+"user_"+email,
+JSON.stringify({
+name,
+email,
+password
+})
+);
+
+alert(
+"Account Created Successfully"
+);
+
+currentUser = email;
+localStorage.setItem(
+"activeUser",
+email
+);
+
+showDashboard();
+loadFolders();
+showWelcomeMessage();
+
+}
+
+/* ==========================
+   LOGIN
+   ========================== */
+
+function loginUser(){
+
+const email =
+document.getElementById("loginEmail").value
+.trim()
+.toLowerCase();
+
+const password =
+document.getElementById("loginPassword").value;
+
+const user =
+JSON.parse(
+localStorage.getItem(
+"user_"+email
+)
+);
+
+if(
+!user ||
+user.password!==password
+){
+
+alert("Invalid Login");
+return;
+
+}
+
+currentUser=email;
+
+localStorage.setItem(
+"activeUser",
+email
+);
+
+showDashboard();
+
+/* PART 2 */
+
+}
+
+/* ==========================
+   MODAL
+   ========================== */
+
+function openFolderModal(){
+
+document
+.getElementById("folderModal")
+.classList.remove("hidden");
+
+}
+
+function closeFolderModal(){
+
+document
+.getElementById("folderModal")
+.classList.add("hidden");
+
+}
+
+/* ==========================
+   LOGOUT
+   ========================== */
+
+function logoutUser(){
+
+localStorage.removeItem(
+"activeUser"
+);
+
+location.reload();
+
+}
+
+/* ==========================
+   PART 2 STARTS BELOW
+   ========================== */
+
+/* ==========================
+   PART 2 - FOLDER SYSTEM
+   ========================== */
+
+/* USER-SPECIFIC STORAGE */
+
+function getFolderKey(){
+
+return "folders_" + currentUser;
+
+}
+
+/* LOAD USER FOLDERS */
+
+function loadFolders(){
+
+folders =
+JSON.parse(
+localStorage.getItem(
+getFolderKey()
+)
+) || [];
+
+renderFolders();
+
+}
+
+/* SAVE USER FOLDERS */
+
+function saveFolders(){
+
+localStorage.setItem(
+getFolderKey(),
+JSON.stringify(folders)
+);
+
+}
+
+/* CREATE FOLDER */
+
+function createFolder(){
+
+const folderName =
+document.getElementById(
+"folderName"
+).value.trim();
+
+if(!folderName){
+
+alert(
+"Please enter a folder name."
+);
+
+return;
+
+}
+
+const exists =
+folders.some(folder =>
+folder.name.toLowerCase() ===
+folderName.toLowerCase()
+);
+
+if(exists){
+
+alert(
+"Folder already exists."
+);
+
+return;
+
+}
+
+folders.push({
+
+id:Date.now(),
+name:folderName,
+created:new Date().toLocaleDateString(),
+notes:[]
+
+});
+
+saveFolders();
+renderFolders();
+
+document.getElementById(
+"folderName"
+).value="";
+
+closeFolderModal();
+
+}
+
+/* DELETE FOLDER */
+
+function deleteFolder(id){
+
+const confirmDelete =
+confirm(
+"Delete this folder and all notes inside it?"
+);
+
+if(!confirmDelete) return;
+
+folders =
+folders.filter(
+folder => folder.id !== id
+);
+
+saveFolders();
+renderFolders();
+
+}
+
+/* OPEN FOLDER */
+
+function openFolder(id){
+
+selectedFolder =
+folders.find(
+folder => folder.id === id
+);
+
+if(!selectedFolder){
+
+alert(
+"Folder not found."
+);
+
+return;
+
+}
+
+/* PART 3 */
+showFolderNotes();
+
+}
+
+/* RENDER FOLDERS */
+
+function renderFolders(){
+
+const folderGrid =
+document.getElementById(
+"folderGrid"
+);
+
+folderGrid.innerHTML="";
+
+if(folders.length===0){
+
+folderGrid.innerHTML=`
+<div class="folder-card">
+<h3>📂 No Folders Yet</h3>
+<p>Create your first folder to start writing notes.</p>
+</div>
+`;
+
+return;
+
+}
+
+folders.forEach(folder=>{
+
+const card =
+document.createElement("div");
+
+card.className=
+"folder-card";
+
+card.innerHTML=`
+
+<h3>📁 ${folder.name}</h3>
+
+<p>
+Created:
+${folder.created}
+</p>
+
+<p>
+${folder.notes.length}
+ Notes
+</p>
+
+<div class="folder-actions">
+
+<button
+class="open-btn"
+onclick="openFolder(${folder.id})">
+Open
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteFolder(${folder.id})">
+Delete
+</button>
+
+</div>
+
+`;
+
+folderGrid.appendChild(card);
+
+});
+
+}
+
+/* SEARCH FOLDERS */
+
+document
+.getElementById(
+"folderSearch"
+)
+.addEventListener(
+"input",
+function(){
+
+const value =
+this.value
+.toLowerCase()
+.trim();
+
+const folderGrid =
+document.getElementById(
+"folderGrid"
+);
+
+folderGrid.innerHTML="";
+
+const results =
+folders.filter(folder=>
+
+folder.name
+.toLowerCase()
+.includes(value)
+
+);
+
+if(results.length===0){
+
+folderGrid.innerHTML=`
+<div class="folder-card">
+<h3>🔍 No Matching Folder</h3>
+</div>
+`;
+
+return;
+
+}
+
+results.forEach(folder=>{
+
+const card =
+document.createElement("div");
+
+card.className=
+"folder-card";
+
+card.innerHTML=`
+
+<h3>📁 ${folder.name}</h3>
+
+<p>
+Created:
+${folder.created}
+</p>
+
+<p>
+${folder.notes.length}
+ Notes
+</p>
+
+<div class="folder-actions">
+
+<button
+class="open-btn"
+onclick="openFolder(${folder.id})">
+Open
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteFolder(${folder.id})">
+Delete
+</button>
+
+</div>
+
+`;
+
+folderGrid.appendChild(card);
+
+});
+
+});
+
+/* AUTO LOGIN */
+
+window.addEventListener(
+"load",
+function(){
+
+const activeUser =
+localStorage.getItem(
+"activeUser"
+);
+
+if(activeUser){
+
+currentUser =
+activeUser;
+
+showDashboard();
+
+loadFolders();
+
+}
+
+});
+
+/* UPDATE LOGIN */
+
+const originalLogin =
+loginUser;
+
+loginUser = function(){
+
+const email =
+document.getElementById(
+"loginEmail"
+).value
+.trim()
+.toLowerCase();
+
+const password =
+document.getElementById(
+"loginPassword"
+).value;
+
+const user =
+JSON.parse(
+localStorage.getItem(
+"user_"+email
+)
+);
+
+if(
+!user ||
+user.password!==password
+){
+
+alert(
+"Invalid Login"
+);
+
+return;
+
+}
+
+currentUser =
+email;
+
+localStorage.setItem(
+"activeUser",
+email
+);
+
+showDashboard();
+
+loadFolders();
+
+};
+
+/* ==========================
+   GLOBAL FOLDER VARIABLE
+   ========================== */
+
+let selectedFolder = null;
+
+/* ==========================
+   PART 3 STARTS BELOW
+   ========================== */ 
+
+/* ==========================
+   PART 3 - NOTES SYSTEM
+   ========================== */
+
+/* ==========================
+   CREATE NOTES PAGE
+   ========================== */
+
+const notesPageHTML = `
+
+<section id="notesPage" class="dashboard hidden">
+
+<div class="topbar">
+
+<div class="brand">
+📝 Folder Notes
+</div>
+
+<div class="top-actions">
+
+<button
+class="small-btn"
+onclick="goHome()">
+🏠 Home
+</button>
+
+<button
+class="small-btn"
+onclick="logoutUser()">
+Logout
+</button>
+
+</div>
+
+</div>
+
+<div style="
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+margin-bottom:20px;
+">
+
+<input
+id="noteTitle"
+placeholder="Note Title"
+style="
+flex:1;
+padding:14px;
+border:none;
+border-radius:12px;
+">
+
+</div>
+
+<textarea
+id="noteContent"
+placeholder="Write your note here..."
+style="
+width:100%;
+height:220px;
+padding:15px;
+border:none;
+border-radius:15px;
+resize:none;
+font-size:1rem;
+margin-bottom:15px;
+"></textarea>
+
+<button
+class="btn btn-primary"
+onclick="addNote()">
+➕ Add Note
+</button>
+
+<br><br>
+
+<div id="notesContainer"></div>
+
+</section>
+
+`;
+
+document.body.insertAdjacentHTML(
+"beforeend",
+notesPageHTML
+);
+
+/* ==========================
+   NAVIGATION
+   ========================== */
+
+function showFolderNotes(){
+
+hideAllPages();
+
+document
+.getElementById("notesPage")
+.classList.remove("hidden");
+
+renderNotes();
+
+}
+
+function goHome(){
+
+showDashboard();
+
+renderFolders();
+
+}
+
+/* ==========================
+   ADD NOTE
+   ========================== */
+
+function addNote(){
+
+const title =
+document.getElementById(
+"noteTitle"
+).value.trim();
+
+const content =
+document.getElementById(
+"noteContent"
+).value.trim();
+
+if(!title || !content){
+
+alert(
+"Please enter a title and note."
+);
+
+return;
+
+}
+
+selectedFolder.notes.push({
+
+id:Date.now(),
+
+title:title,
+
+content:content,
+
+created:new Date()
+.toLocaleString()
+
+});
+
+updateFolderStorage();
+
+document.getElementById(
+"noteTitle"
+).value="";
+
+document.getElementById(
+"noteContent"
+).value="";
+
+renderNotes();
+
+}
+
+/* ==========================
+   DELETE NOTE
+   ========================== */
+
+function deleteNote(noteId){
+
+const confirmDelete =
+confirm(
+"Delete this note?"
+);
+
+if(!confirmDelete) return;
+
+selectedFolder.notes =
+selectedFolder.notes.filter(
+
+note => note.id !== noteId
+
+);
+
+updateFolderStorage();
+
+renderNotes();
+
+}
+
+/* ==========================
+   UPDATE STORAGE
+   ========================== */
+
+function updateFolderStorage(){
+
+const folderIndex =
+folders.findIndex(
+
+folder =>
+folder.id === selectedFolder.id
+
+);
+
+if(folderIndex !== -1){
+
+folders[folderIndex] =
+selectedFolder;
+
+saveFolders();
+
+}
+
+}
+
+/* ==========================
+   RENDER NOTES
+   ========================== */
+
+function renderNotes(){
+
+const container =
+document.getElementById(
+"notesContainer"
+);
+
+container.innerHTML="";
+
+const heading =
+document.createElement("h2");
+
+heading.style.color =
+"white";
+
+heading.style.marginBottom =
+"20px";
+
+heading.innerHTML =
+`📁 ${selectedFolder.name}`;
+
+container.appendChild(
+heading
+);
+
+if(
+selectedFolder.notes.length===0
+){
+
+container.innerHTML += `
+
+<div class="folder-card">
+
+<h3>
+📝 No Notes Yet
+</h3>
+
+<p>
+Create your first note inside this folder.
+</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+selectedFolder.notes
+.slice()
+.reverse()
+.forEach(note=>{
+
+const card =
+document.createElement("div");
+
+card.className =
+"folder-card";
+
+card.style.marginBottom =
+"20px";
+
+card.innerHTML = `
+
+<h3>
+📝 ${note.title}
+</h3>
+
+<p style="
+margin-top:10px;
+white-space:pre-wrap;
+">
+${note.content}
+</p>
+
+<p style="
+margin-top:15px;
+font-size:12px;
+opacity:.8;
+">
+${note.created}
+</p>
+
+<div class="folder-actions">
+
+<button
+class="delete-btn"
+onclick="deleteNote(${note.id})">
+Delete
+</button>
+
+</div>
+
+`;
+
+container.appendChild(card);
+
+});
+
+}
+
+/* ==========================
+   ENTER KEY SUPPORT
+   ========================== */
+
+document.addEventListener(
+"keydown",
+function(event){
+
+const noteTitle =
+document.getElementById(
+"noteTitle"
+);
+
+if(
+noteTitle &&
+document.activeElement === noteTitle &&
+event.key === "Enter"
+){
+
+event.preventDefault();
+
+addNote();
+
+}
+
+}
+);
+
+/* ==========================
+   NOTES PAGE READY
+   ========================== */
+
+console.log(
+"Notes system loaded successfully."
+);
+
+/* ==========================
+   PART 4 STARTS BELOW
+   ========================== */
+
+/* ==========================
+   PART 4 - FINAL FEATURES
+   ========================== */
+
+/* ==========================
+   WELCOME USER
+   ========================== */
+
+function showWelcomeMessage(){
+
+const user =
+JSON.parse(
+localStorage.getItem(
+"user_" + currentUser
+)
+);
+
+if(!user) return;
+
+const brand =
+document.querySelector(
+".brand"
+);
+
+if(
+brand &&
+!document.getElementById(
+"welcomeUser"
+)
+){
+
+const welcome =
+document.createElement("div");
+
+welcome.id =
+"welcomeUser";
+
+welcome.style.color =
+"white";
+
+welcome.style.fontSize =
+"16px";
+
+welcome.style.marginTop =
+"5px";
+
+welcome.innerHTML =
+`Welcome, ${user.name} 👋`;
+
+brand.appendChild(
+welcome
+);
+
+}
+
+}
+
+/* ==========================
+   EDIT NOTE
+   ========================== */
+
+function editNote(noteId){
+
+const note =
+selectedFolder.notes.find(
+n => n.id === noteId
+);
+
+if(!note) return;
+
+const newTitle =
+prompt(
+"Edit Note Title",
+note.title
+);
+
+if(newTitle===null) return;
+
+const newContent =
+prompt(
+"Edit Note Content",
+note.content
+);
+
+if(newContent===null) return;
+
+note.title =
+newTitle.trim();
+
+note.content =
+newContent.trim();
+
+updateFolderStorage();
+
+renderNotes();
+
+}
+
+/* ==========================
+   OVERRIDE RENDER NOTES
+   ========================== */
+
+const oldRenderNotes =
+renderNotes;
+
+renderNotes = function(){
+
+const container =
+document.getElementById(
+"notesContainer"
+);
+
+container.innerHTML="";
+
+const heading =
+document.createElement("h2");
+
+heading.style.color =
+"white";
+
+heading.style.marginBottom =
+"20px";
+
+heading.innerHTML =
+`📁 ${selectedFolder.name}`;
+
+container.appendChild(
+heading
+);
+
+if(
+selectedFolder.notes.length===0
+){
+
+container.innerHTML += `
+
+<div class="folder-card">
+
+<h3>
+📝 No Notes Yet
+</h3>
+
+<p>
+Create your first note inside this folder.
+</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+selectedFolder.notes
+.slice()
+.reverse()
+.forEach(note=>{
+
+const card =
+document.createElement("div");
+
+card.className =
+"folder-card";
+
+card.style.marginBottom =
+"20px";
+
+card.innerHTML = `
+
+<h3>
+📝 ${note.title}
+</h3>
+
+<p style="
+margin-top:10px;
+white-space:pre-wrap;
+">
+${note.content}
+</p>
+
+<p style="
+margin-top:15px;
+font-size:12px;
+opacity:.8;
+">
+${note.created}
+</p>
+
+<div class="folder-actions">
+
+<button
+class="open-btn"
+onclick="editNote(${note.id})">
+Edit
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteNote(${note.id})">
+Delete
+</button>
+
+</div>
+
+`;
+
+container.appendChild(card);
+
+});
+
+};
+
+/* ==========================
+   FOLDER STATISTICS
+   ========================== */
+
+function displayFolderStats(){
+
+if(
+document.getElementById(
+"folderStats"
+)
+){
+
+document
+.getElementById(
+"folderStats"
+)
+.remove();
+
+}
+
+const stats =
+document.createElement("div");
+
+stats.id =
+"folderStats";
+
+stats.style.color =
+"white";
+
+stats.style.marginBottom =
+"25px";
+
+stats.style.fontWeight =
+"600";
+
+let totalNotes = 0;
+
+folders.forEach(folder=>{
+
+totalNotes +=
+folder.notes.length;
+
+});
+
+stats.innerHTML =
+
+`📂 Folders: ${folders.length}
+&nbsp;&nbsp;|&nbsp;&nbsp;
+📝 Notes: ${totalNotes}`;
+
+const dashboard =
+document.getElementById(
+"dashboardPage"
+);
+
+dashboard.insertBefore(
+stats,
+document.getElementById(
+"folderGrid"
+)
+);
+
+}
+
+/* ==========================
+   OVERRIDE FOLDER RENDER
+   ========================== */
+
+const oldRenderFolders =
+renderFolders;
+
+renderFolders = function(){
+
+oldRenderFolders();
+
+displayFolderStats();
+
+showWelcomeMessage();
+
+};
+
+/* ==========================
+   BETTER EMPTY STATE
+   ========================== */
+
+function improveEmptyState(){
+
+const grid =
+document.getElementById(
+"folderGrid"
+);
+
+if(
+folders.length===0
+){
+
+grid.innerHTML = `
+
+<div class="folder-card">
+
+<h2>
+📂 Welcome to NoteNest
+</h2>
+
+<br>
+
+<p>
+Create folders to organize your notes.
+Each account has its own private workspace.
+</p>
+
+<br>
+
+<p>
+Click "New Folder" to begin.
+</p>
+
+</div>
+
+`;
+
+}
+
+}
+
+/* ==========================
+   OVERRIDE AGAIN
+   ========================== */
+
+const finalRenderFolders =
+renderFolders;
+
+renderFolders = function(){
+
+finalRenderFolders();
+
+improveEmptyState();
+
+};
+
+/* ==========================
+   RESPONSIVE IMPROVEMENTS
+   ========================== */
+
+window.addEventListener(
+"resize",
+function(){
+
+if(
+window.innerWidth < 600
+){
+
+document.body.style.fontSize =
+"14px";
+
+}else{
+
+document.body.style.fontSize =
+"16px";
+
+}
+
+}
+);
+
+/* ==========================
+   AUTO SAVE SESSION
+   ========================== */
+
+window.addEventListener(
+"beforeunload",
+function(){
+
+saveFolders();
+
+});
+
+/* ==========================
+   QUICK FOLDER CREATION
+   ========================== */
+
+document.addEventListener(
+"keydown",
+function(event){
+
+const folderInput =
+document.getElementById(
+"folderName"
+);
+
+if(
+folderInput &&
+document.activeElement===folderInput &&
+event.key==="Enter"
+){
+
+event.preventDefault();
+
+createFolder();
+
+}
+
+}
+);
+
+/* ==========================
+   LOAD DASHBOARD ENHANCEMENTS
+   ========================== */
+
+window.addEventListener(
+"load",
+function(){
+
+if(currentUser){
+
+renderFolders();
+
+}
+
+});
+
+/* ==========================
+   PROJECT READY
+   ========================== */
+
+console.log(
+"✅ NoteNest Loaded Successfully"
+);
+
+/* END OF PROJECT */
+
+</script>
+
+</body>
+</html>
